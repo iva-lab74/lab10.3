@@ -1,5 +1,6 @@
 
-import './App.css'
+
+import { useTheme } from './contexts/ThemeContext';
 
 function App() {
   
