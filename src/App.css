@@ -1,0 +1,6 @@
+.app.dark button { background: #2a2a2a; color: #f5f5f5; border: 1px solid #444; }
+.app.dark input  { background: #2a2a2a; color: #f5f5f5; border: 1px solid #444; }
+
+
+.app.light { background: #ffffff; color: #111111; }
+.app.dark  { background: #111111; color: #f5f5f5; }

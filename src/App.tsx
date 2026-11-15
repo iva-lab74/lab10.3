@@ -1,11 +1,12 @@
 
-
+import './App.css'
 import { useTheme } from './contexts/ThemeContext';
 
 function App() {
+  const {theme, toggleTheme } = useTheme()
   
   return (
-    <div className="app">
+    <div className={`app ${theme}`}>
       <h1>Todo App</h1>
       <div className="row">
         <input placeholder="Add a todo..." />
@@ -17,7 +18,7 @@ function App() {
         <button>Completed</button>
       </div>
       <p className="empty">No todos yet! Add one above.</p>
-      <button>🌙 Dark mode</button>
+      <button onClick={toggleTheme}>{theme === 'light' ? '🌙 Dark mode' : '☀️ Light mode'}</button>
     </div>
   )
 }
