@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, type ReactNode } from "react";
+import { createContext, useContext, useState, useEffect, useMemo, useCallback, type ReactNode } from "react";
 //named values
 type Theme = 'light' | 'dark'
 
@@ -12,23 +12,32 @@ const ThemeContext = createContext<ThemeContextValue | undefined>(undefined)
 //wraps the app, share value
 export function ThemeProvider({ children }: { children: ReactNode }) {
     //starts with current theme light mode
-    const [theme, setTheme] = useState<Theme>('light')
+    const [theme, setTheme] = useState<Theme>(() => {
+        const saved = localStorage.getItem('theme')
+        return saved === 'dark' ? 'dark' : 'light'
+    })
+
+    useEffect(() => {
+        localStorage.setItem('theme', theme)
+    }, [theme])
 
     //flipping/ reads the previous theme first
-    const toggleTheme = () => {
-    setTheme(t => (t === 'light' ? 'dark' : 'light'))
-  }
+    const toggleTheme = useCallback(() => {
+        setTheme(t => (t === 'light' ? 'dark' : 'light'))
+    }, [])
+    //memo
+    const value = useMemo(() => ({ theme, toggleTheme }), [theme, toggleTheme])
 
     return (
-    <ThemeContext.Provider value={{ theme, toggleTheme }}>
-      {children}
-    </ThemeContext.Provider>
-  )
+        <ThemeContext.Provider value={value}>
+            {children}
+        </ThemeContext.Provider>
+    )
 
 }
 //THE HOOK
 export function useTheme() {
-  const ctx = useContext(ThemeContext)
-  if (!ctx) throw new Error('useTheme must be used inside ThemeProvider')
-  return ctx
+    const ctx = useContext(ThemeContext)
+    if (!ctx) throw new Error('useTheme must be used inside ThemeProvider')
+    return ctx
 }

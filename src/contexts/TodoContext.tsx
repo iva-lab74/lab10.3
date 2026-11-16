@@ -1,5 +1,5 @@
 //need useReducer
-import { createContext, useContext, useReducer, type ReactNode } from 'react'
+import { createContext, useContext, useReducer, useEffect, useMemo, useCallback, type ReactNode } from 'react'
 //shape
 export type Todo = {
     id: string;
@@ -53,24 +53,34 @@ const TodoContext = createContext<TodoContextValue | undefined>(undefined)
 
 export function TodoProvider({ children }: { children: ReactNode }) {
     //disptach sends action to reducer[] start empty
-    const [todos, dispatch] = useReducer(reducer, [])
+    const [todos, dispatch] = useReducer(reducer, [], () => {
+        const saved = localStorage.getItem('todos')
+        return saved ? JSON.parse(saved) : []
+    })
+
+    //Persistence
+    useEffect(() => {
+        localStorage.setItem('todos', JSON.stringify(todos))
+    }, [todos])
 
     //clean todo add
-    const addTodo = (text: string) => dispatch({ type: 'add', text })
+    const addTodo = useCallback((text: string) => dispatch({ type: 'add', text }), [])
 
-    const toggleTodo = (id: string) => dispatch({ type: 'toggle', id })
+    const toggleTodo = useCallback((id: string) => dispatch({ type: 'toggle', id }), [])
 
-    const deleteTodo = (id: string) => dispatch({ type: 'delete', id })
+    const deleteTodo = useCallback((id: string) => dispatch({ type: 'delete', id }), [])
 
-    const editTodo = (id: string, text: string) => dispatch({ type: 'edit', id, text })
+    const editTodo = useCallback((id: string, text: string) => dispatch({ type: 'edit', id, text }), [])
 
-    const clearCompleted = () => dispatch({ type: 'clearCompleted' })
+    const clearCompleted = useCallback(() => dispatch({ type: 'clearCompleted' }), [])
 
-
+    const value = useMemo(() => ({ todos, addTodo, toggleTodo, deleteTodo, editTodo, clearCompleted }),
+        [todos, addTodo, toggleTodo, deleteTodo, editTodo, clearCompleted]
+    )
 
     //add todo with every add
     return (
-        <TodoContext.Provider value={{ todos, addTodo, toggleTodo, deleteTodo, editTodo, clearCompleted }}>
+        <TodoContext.Provider value={value}>
             {children}
         </TodoContext.Provider>
     )
