@@ -43,6 +43,10 @@ function reducer(state: Todo[], action: Action): Todo[] {
 type TodoContextValue = {
     todos: Todo[]
     addTodo: (text: string) => void
+    toggleTodo: (id: string) => void
+    deleteTodo: (id: string) => void
+    editTodo: (id: string, text: string) => void
+    clearCompleted: () => void
 }
 
 const TodoContext = createContext<TodoContextValue | undefined>(undefined)
@@ -53,9 +57,20 @@ export function TodoProvider({ children }: { children: ReactNode }) {
 
     //clean todo add
     const addTodo = (text: string) => dispatch({ type: 'add', text })
+
+    const toggleTodo = (id: string) => dispatch({ type: 'toggle', id })
+
+    const deleteTodo = (id: string) => dispatch({ type: 'delete', id })
+
+    const editTodo = (id: string, text: string) => dispatch({ type: 'edit', id, text })
+
+    const clearCompleted = () => dispatch({ type: 'clearCompleted' })
+
+
+
     //add todo with every add
     return (
-        <TodoContext.Provider value={{ todos, addTodo }}>
+        <TodoContext.Provider value={{ todos, addTodo, toggleTodo, deleteTodo, editTodo, clearCompleted }}>
             {children}
         </TodoContext.Provider>
     )
