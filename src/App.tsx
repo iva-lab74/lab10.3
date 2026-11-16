@@ -1,6 +1,8 @@
 
 import './App.css'
 import { useTheme } from './contexts/ThemeContext';
+import { TodoInput } from './components/TodoInput'
+import { TodoList } from './components/TodoList'
 
 function App() {
   const {theme, toggleTheme } = useTheme()
@@ -8,10 +10,12 @@ function App() {
   return (
     <div className={`app ${theme}`}>
       <h1>Todo App</h1>
+      <TodoInput />
       <div className="row">
         <input placeholder="Add a todo..." />
         <button>Add</button>
       </div>
+      <TodoList />
       <div className="row">
         <button>All</button>
         <button>Active</button>

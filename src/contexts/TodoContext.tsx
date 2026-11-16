@@ -6,16 +6,32 @@ export type Todo = {
     text: string;
     completed: boolean
 }
-//actions
+//actions/ name described
 type Action =
     | { type: 'add'; text: string }
+    | { type: 'toggle'; id: string }
+    | { type: 'delete'; id: string }
+    | { type: 'edit'; id: string; text: string }
+    | { type: 'clearCompleted' }
 
-//whats new state/ anyother action stays unchanged
+//whats new state/ another action stays unchanged
 function reducer(state: Todo[], action: Action): Todo[] {
-
+    //all the actions
     switch (action.type) {
         case 'add':
             return [...state, { id: crypto.randomUUID(), text: action.text, completed: false }]
+        //returns new array, completed when matched
+        case 'toggle':
+            return state.map(t => t.id === action.id ? { ...t, completed: !t.completed } : t)
+        //returns
+        case 'delete':
+            return state.filter(t => t.id !== action.id)
+        //replace text
+        case 'edit':
+            return state.map(t => t.id === action.id ? { ...t, text: action.text } : t)
+        //clears
+        case 'clearCompleted':
+            return state.filter(t => !t.completed)
 
         default:
             return state
@@ -46,7 +62,7 @@ export function TodoProvider({ children }: { children: ReactNode }) {
 }
 //needs a useTodo hook to reuse with
 export function useTodo() {
-  const ctx = useContext(TodoContext)
-  if (!ctx) throw new Error('useTodos must be used inside TodoProvider')
-  return ctx
+    const ctx = useContext(TodoContext)
+    if (!ctx) throw new Error('useTodos must be used inside TodoProvider')
+    return ctx
 }
