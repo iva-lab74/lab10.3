@@ -16,6 +16,8 @@ function App() {
         <button>Add</button>
       </div>
       <TodoList />
+      <TodoList />
+      <ClearCompletedButton />
       <div className="row">
         <button>All</button>
         <button>Active</button>
