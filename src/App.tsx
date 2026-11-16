@@ -3,6 +3,7 @@ import './App.css'
 import { useTheme } from './contexts/ThemeContext';
 import { TodoInput } from './components/TodoInput'
 import { TodoList } from './components/TodoList'
+import { ClearCompletedButton } from './components/ClearCompletedButton'
 
 function App() {
   const {theme, toggleTheme } = useTheme()
