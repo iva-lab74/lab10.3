@@ -45,7 +45,7 @@ export function TodoProvider({ children }: { children: ReactNode }) {
     )
 }
 //needs a useTodo hook to reuse with
-export function useTodos() {
+export function useTodo() {
   const ctx = useContext(TodoContext)
   if (!ctx) throw new Error('useTodos must be used inside TodoProvider')
   return ctx
